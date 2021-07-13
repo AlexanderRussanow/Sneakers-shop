@@ -1,79 +1,32 @@
 import React from "react";
+import Header from "./components/Header";
+import Drawer from "./components/Drawer";
+import CardItem from "./components/CardItem";
+
+const sneakersArray = [
+  {
+    id: 1,
+    title: "New Balance",
+    price: "2990 Kč",
+    img: "/img/sneakers/nb.jpeg",
+  },
+  { id: 2, title: "Adidas", price: "2550 Kč", img: "/img/sneakers/a1.jpeg" },
+  { id: 3, title: "Asicks", price: "1990 Kč", img: "/img/sneakers/as1.jpeg" },
+  {
+    id: 4,
+    title: "New Balance light",
+    price: "990 Kč",
+    img: "/img/sneakers/nb2.jpeg",
+  },
+];
 
 function App() {
   return (
     <div className="wrapper clear">
-      <div className="overlay">
-        <div className="drawer">
-          <h2 className="mb-30 d-flex justify-between">
-            Cart{" "}
-            <img
-              className="removeItem cu-p"
-              height={30}
-              width={30}
-              src="/img/remove.png"
-              alt=""
-            />
-          </h2>
-
-          <div className="items">
-            <div className="cartItem d-flex align-center mb-20">
-              <div
-                style={{ backgroundImage: "url(/img/a1.jpeg)" }}
-                className="cartItemImg"
-              ></div>
-
-              <div className="mr-20 flex">
-                <p className="mb-5">Adidas Sneakers</p>
-                <b>2550 Kč</b>
-              </div>
-              <img
-                className="removeItem"
-                height={30}
-                width={30}
-                src="/img/remove.png"
-                alt=""
-              />
-            </div>
-          </div>
-
-          <div className="cartTotalBlock">
-            <ul>
-              <li>
-                <span>Total: </span>
-                <div></div>
-                <b>Sneakers price</b>
-              </li>
-              <li>
-                <span>Tax: </span>
-                <div></div>
-                <b>Tax value</b>
-              </li>
-            </ul>
-            <button className="greenButton">Place order</button>
-          </div>
-        </div>
+      <div style={{ display: "none" }} className="overlay">
+        <Drawer />
       </div>
-
-      <header className="d-flex justify-between align-center p-40">
-        <div className="d-flex align-center">
-          <img width={180} height={150} src="/img/logo.png" alt="" />
-          <div>
-            <h3 className="text-uppercase">Sneakers Eshop</h3>
-            <p className="opacity-5">only best sneakers</p>
-          </div>
-        </div>
-        <ul className="d-flex">
-          <li className="mr-30">
-            <img width={18} height={18} src="/img/basket.png" alt="" />
-            <span>Price tag</span>
-          </li>
-          <li>
-            <img width={18} height={18} src="/img/user1.png" alt="" />
-          </li>
-        </ul>
-      </header>
-
+      <Header />
       <div className="content p-40">
         <div className="d-flex align-center mb-40 justify-between">
           <h2>All sneakers</h2>
@@ -82,63 +35,15 @@ function App() {
             <input placeholder="Search..." type="search" />
           </div>
         </div>
-
         <div className="d-flex">
-          <div className="card">
-            <div className="favorite">
-              <img height={15} width={15} src="/img/heart-unlike.png" alt="" />
-            </div>
-            <img width={132} height={132} src="/img/nb.jpeg" />
-            <h5>New Balance</h5>
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column ">
-                <span>Price: </span>
-                <b>2990 Kč</b>
-              </div>
-              <button className="button">
-                <img width={20} height={20} src="/img/plus.png" alt="" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <img width={132} height={132} src="/img/a1.jpeg" />
-            <h5>Adidas</h5>
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column ">
-                <span>Price: </span>
-                <b>2550 Kč</b>
-              </div>
-              <button className="button">
-                <img width={20} height={20} src="/img/plus.png" alt="" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <img width={132} height={132} src="/img/as1.jpeg" />
-            <h5>Asicks</h5>
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column ">
-                <span>Price: </span>
-                <b>1990 Kč</b>
-              </div>
-              <button className="button">
-                <img width={20} height={20} src="/img/plus.png" alt="" />
-              </button>
-            </div>
-          </div>
-          <div className="card">
-            <img width={132} height={132} src="/img/nb2.jpeg" />
-            <h5>New Balance light</h5>
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column ">
-                <span>Price: </span>
-                <b>990 Kč</b>
-              </div>
-              <button className="button">
-                <img width={20} height={20} src="/img/plus.png" alt="" />
-              </button>
-            </div>
-          </div>
+          {sneakersArray.map((item) => (
+            <CardItem
+              key={item.id}
+              name={item.title}
+              price={item.price}
+              img={item.img}
+            />
+          ))}
         </div>
       </div>
     </div>
