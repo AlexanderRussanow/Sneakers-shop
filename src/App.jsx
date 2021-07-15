@@ -1,51 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
-import CardItem from "./components/CardItem";
-
-const sneakersArray = [
-  {
-    id: 1,
-    title: "New Balance",
-    price: "2990 Kč",
-    img: "/img/sneakers/nb.jpeg",
-  },
-  { id: 2, title: "Adidas", price: "2550 Kč", img: "/img/sneakers/a1.jpeg" },
-  { id: 3, title: "Asicks", price: "1990 Kč", img: "/img/sneakers/as1.jpeg" },
-  {
-    id: 4,
-    title: "New Balance light",
-    price: "990 Kč",
-    img: "/img/sneakers/nb2.jpeg",
-  },
-];
+import axios from "axios";
+import { Route } from "react-router-dom";
+import Home from "./pages/home";
+import Favorites from "./pages/Favorites";
 
 function App() {
+  const [openCart, setOpenCart] = React.useState(false);
+  const [sneakers, setSneakers] = useState([]);
+  const [itemsInCard, setItemsInCard] = useState([]);
+  const [searchLine, setSearchLine] = useState("");
+  const [favList, setFavList] = useState([]);
+
+  useEffect(() => {
+    //   fetch("https://60f035ecf587af00179d3dc9.mockapi.io/sneakers").then((res) =>
+    //     res.json().then((json) => setSneakers(json))
+    //   );
+    // }, []
+    axios
+      .get("https://60f035ecf587af00179d3dc9.mockapi.io/sneakers")
+      .then((res) => setSneakers(res.data));
+
+    axios
+      .get("https://60f035ecf587af00179d3dc9.mockapi.io/card")
+      .then((res) => setItemsInCard(res.data));
+
+    axios
+      .get("https://60f035ecf587af00179d3dc9.mockapi.io/favorite")
+      .then((res) => setFavList(res.data));
+  }, []);
+
+  const addToFavList = (sne) => {
+    if (favList.find(obj => obj.id === sne.id)) {
+      console.log(sne.id)
+      axios.delete(`https://60f035ecf587af00179d3dc9.mockapi.io/favorite/${sne.id}`)
+      setFavList((prev) => prev.filter(item => item.id !== sne.id))
+    } else {
+    axios.post("https://60f035ecf587af00179d3dc9.mockapi.io/favorite", sne);
+    setFavList((prev) => [...prev, sne])}
+  };
+
+  const onAddToCard = (obj) => {
+    axios.post("https://60f035ecf587af00179d3dc9.mockapi.io/card", obj);
+    setItemsInCard((prev) => [...prev, obj]);
+  };
+
+  const removeFromCard = (id) => {
+    axios.delete(`https://60f035ecf587af00179d3dc9.mockapi.io/card/${id}`);
+    setItemsInCard((prev) => prev.filter((s) => s.id !== id));
+  };
+
   return (
     <div className="wrapper clear">
-      <div style={{ display: "none" }} className="overlay">
-        <Drawer />
-      </div>
-      <Header />
-      <div className="content p-40">
-        <div className="d-flex align-center mb-40 justify-between">
-          <h2>All sneakers</h2>
-          <div className="search-block d-flex align-center">
-            <img height={33} width={33} src="/img/search.png" alt="Search" />
-            <input placeholder="Search..." type="search" />
-          </div>
-        </div>
-        <div className="d-flex">
-          {sneakersArray.map((item) => (
-            <CardItem
-              key={item.id}
-              name={item.title}
-              price={item.price}
-              img={item.img}
-            />
-          ))}
-        </div>
-      </div>
+      {openCart ? (
+        <Drawer
+          openCard={() => setOpenCart(!openCart)}
+          itemsInCard={itemsInCard}
+          removeFromCard={removeFromCard}
+        />
+      ) : null}
+      <Header onClick={() => setOpenCart(!openCart)} />
+
+      <Route path="/favorites" exact>
+        <Favorites favList={favList} onAddToCard={onAddToCard} addToFavList={addToFavList} />
+      </Route>
+      <Route path="/" exact>
+        <Home
+          sneakers={sneakers}
+          searchLine={searchLine}
+          setSearchLine={setSearchLine}
+          onAddToCard={onAddToCard}
+          addToFavList={addToFavList}
+        
+        />
+      </Route>
     </div>
   );
 }

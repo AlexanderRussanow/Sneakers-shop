@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 
-const CardItem = ({ name, price, img }) => {
+
+const CardItem = ({ id, name, price, img, addToCard, addToFavList, favorited = false }) => {
+  const [likeBtn, setLikeBtn] = React.useState(false);
+  const [favorite, setFavorite] = React.useState(favorited);
+
+  const likeToggle = () => {
+   addToCard({id, name, price, img});
+    setLikeBtn(!likeBtn);
+  };
+  const favoriteToggle = () => {
+   addToFavList({id, name, price, img})
+     setFavorite(!favorite)};
+
   return (
     <div className="card">
       <div className="favorite">
-        <img height={15} width={15} src="/img/heart-unlike.png" alt="" />
+        <img
+          onClick={favoriteToggle}
+          height={15}
+          width={15}
+          src={favorite ? "/img/heart-like.png" : "/img/heart-unlike.png"}
+        />
       </div>
       <img width={132} height={132} src={img} />
       <h5>{name}</h5>
@@ -13,9 +30,13 @@ const CardItem = ({ name, price, img }) => {
           <span>Price: </span>
           <b>{price}</b>
         </div>
-        <button className="button">
-          <img width={20} height={20} src="/img/plus.png" alt="" />
-        </button>
+        <img
+          className="plus"
+          onClick={likeToggle}
+          width={20}
+          height={20}
+          src={likeBtn ? "/img/green-btn.png" : "/img/plus.png"}
+        />
       </div>
     </div>
   );
