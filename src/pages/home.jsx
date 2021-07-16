@@ -7,7 +7,24 @@ const Home = ({
   setSearchLine,
   onAddToCard,
   addToFavList,
+  isLoading,
 }) => {
+
+  const renderItems = () => {
+    const filteredSneakers = sneakers.filter((s) =>
+      s.title.toLowerCase().includes(searchLine.toLowerCase())
+    );
+    return (isLoading ? [...Array(10)] : filteredSneakers).map((item, index) => (
+      <CardItem
+        key={index}
+        {...item}
+        addToCard={(obj) => onAddToCard(obj)}
+        addToFavList={(obj) => addToFavList(obj)}
+        loading={isLoading}
+      />
+    ));
+  };
+
   return (
     <div className="content p-40">
       <div className="d-flex align-center mb-40 justify-between">
@@ -22,20 +39,7 @@ const Home = ({
           />
         </div>
       </div>
-      <div className="d-flex flex-wrap">
-        {sneakers
-          .filter((s) =>
-            s.title.toLowerCase().includes(searchLine.toLowerCase())
-          )
-          .map((item) => (
-            <CardItem
-              key={item.id}
-              {...item}
-              addToCard={onAddToCard}
-              addToFavList={addToFavList}
-            />
-          ))}
-      </div>
+      <div className="d-flex flex-wrap">{renderItems()}</div>
     </div>
   );
 };

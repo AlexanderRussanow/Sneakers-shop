@@ -1,8 +1,11 @@
 import React from "react";
 import CardItem from "../components/CardItem";
 import { Link } from "react-router-dom";
+import { AppContext } from "../App";
 
-const Favorites = ({ favList, onAddToCard, addToFavList }) => {
+const Favorites = ({ onAddToCard, addToFavList }) => {
+  const {favList} = React.useContext(AppContext);
+
   return (
     <div className="content p-40">
       <div className="d-flex align-center mb-40 justify-between">
@@ -15,8 +18,8 @@ const Favorites = ({ favList, onAddToCard, addToFavList }) => {
               key={item.id}
               {...item}
               favorited={true}
-              addToCard={onAddToCard}
-              addToFavList={addToFavList}
+              addToCard={(obj) => onAddToCard(obj)}
+              addToFavList={(obj) => addToFavList(obj)}
             />
           ))
         ) : (
