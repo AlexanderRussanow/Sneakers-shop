@@ -14,12 +14,13 @@ const CardItem = ({
 }) => {
   const { isItemAdded } = React.useContext(AppContext);
   const [favorite, setFavorite] = React.useState(favorited);
+  const obj = { id, parentId: id, title, img, price }
 
   const likeToggle = () => {
-    addToCard({ id, title, price, img });
+    addToCard(obj);
   };
   const favoriteToggle = () => {
-    addToFavList({ id, title, price, img });
+    addToFavList(obj);
     setFavorite(!favorite);
   };
 

@@ -3,24 +3,34 @@ import { AppContext } from "../App";
 import Info from "./Info";
 import axios from "axios";
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const Drawer = ({ openCard, itemsInCard, removeFromCard }) => {
   const [orderScreen, setOrderScreen] = useState(false);
   const { setItemsInCard } = React.useContext(AppContext);
   const [orderId, setOrderId] = useState(null);
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsloading] = useState(false);
 
   const placeOrder = async () => {
     try {
+       
       setIsloading(true);
       const { data } = await axios.post(
         "https://60f035ecf587af00179d3dc9.mockapi.io/orders",
-        {items: itemsInCard}
+        { items: itemsInCard }
       );
-      
+
       setOrderId(data.id);
       setOrderScreen(true);
       setItemsInCard([]);
-      
+
+      for (let i = 0; i < itemsInCard.length; i++) {
+        const item = itemsInCard[i];
+        await axios.delete(
+          "https://60f035ecf587af00179d3dc9.mockapi.io/card/" + item.id
+        );
+        await delay(1000);
+      }
     } catch (error) {
       alert("Some error");
     }
