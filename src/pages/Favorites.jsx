@@ -1,10 +1,10 @@
 import React from "react";
-import CardItem from "../components/CardItem";
-import { Link } from "react-router-dom";
 import { AppContext } from "../App";
+import CardItem from "../components/CardItem";
+import Info from "../components/Info";
 
-const Favorites = ({ onAddToCard, addToFavList }) => {
-  const {favList} = React.useContext(AppContext);
+const Favorites = ({onAddToCard, addToFavList}) => {
+  const { favList } = React.useContext(AppContext);
 
   return (
     <div className="content p-40">
@@ -23,19 +23,13 @@ const Favorites = ({ onAddToCard, addToFavList }) => {
             />
           ))
         ) : (
-          <div className="cardEmpty d-flex align-center justify-center flex-column flex">
-            <img
-              className="mb-20"
-              width={120}
-              height={120}
-              src="/img/sad.png"
-            />
-            <h2>Your favorite list is empty!</h2>
-            <p>Don't hesitate and add something for your next purchase here!</p>
-            <Link to="/" exact>
-              <button className="greenButton">Back to the home screen!</button>
-            </Link>
-          </div>
+          <Info
+            image={"/img/sad.png"}
+            title={`Your favorite list is empty!`}
+            description={
+              "Don't hesitate and add something for your next purchase here!"
+            }
+          />
         )}
       </div>
     </div>

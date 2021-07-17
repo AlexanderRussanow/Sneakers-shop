@@ -1,5 +1,6 @@
 import React from "react";
 import { AppContext } from "../App";
+import { Link } from "react-router-dom";
 
 const Info = ({ image, title, description }) => {
   const { setOpenCart } = React.useContext(AppContext);
@@ -9,9 +10,11 @@ const Info = ({ image, title, description }) => {
       <img className="mb-20" width={120} height={120} src={image} />
       <h2>{title}</h2>
       <p>{description}</p>
-      <button onClick={() => setOpenCart(false)} className="greenButton">
-        Back to the home screen!
-      </button>
+      <Link to="/" exact>
+        <button onClick={() => setOpenCart(false)} className="greenButton">
+          Back to the home screen!
+        </button>
+      </Link>
     </div>
   );
 };

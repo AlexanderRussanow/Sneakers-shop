@@ -5,6 +5,7 @@ import axios from "axios";
 import { Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
+import Orders from "./pages/Orders";
 
 export const AppContext = React.createContext({});
 
@@ -37,19 +38,20 @@ function App() {
     fetchData();
   }, []);
 
-  const addToFavList = async (sne) => {
+  const addToFavList = async (obj) => {
     try {
-      if (favList.find((obj) => Number(obj.id) === Number(sne.id))) {
+      const findItem = favList.find((item) => Number(item.id) === Number(obj.id))
+      if (findItem) {
         axios.delete(
-          `https://60f035ecf587af00179d3dc9.mockapi.io/favorite/${sne.id}`
+          `https://60f035ecf587af00179d3dc9.mockapi.io/favorite/${findItem.id}`
         );
         setFavList((prev) =>
-          prev.filter((item) => Number(item.id) !== Number(sne.id))
+          prev.filter((item) => Number(item.id) !== Number(obj.id))
         );
       } else {
         const { data } = await axios.post(
           "https://60f035ecf587af00179d3dc9.mockapi.io/favorite",
-          sne
+          obj
         );
         setFavList((prev) => [...prev, data]);
       }
@@ -71,12 +73,12 @@ function App() {
           prev.filter((item) => Number(item.parentId) !== Number(obj.id))
         );
       } else {
-        
+        setItemsInCard((prev) => [...prev, obj]);
         const { data } = await axios.post(
           "https://60f035ecf587af00179d3dc9.mockapi.io/card",
           obj
         );
-        setItemsInCard((prev) => [...prev, obj]);
+        
         setItemsInCard((prev) =>
           prev.map((item) => {
             if (item.parentId === data.parentId) {
@@ -112,6 +114,9 @@ function App() {
         isItemAdded,
         setOpenCart,
         setItemsInCard,
+        onAddToCard,
+        addToFavList,
+        isLoading
       }}
     >
       <div className="wrapper clear">
@@ -137,6 +142,9 @@ function App() {
             addToFavList={addToFavList}
             isLoading={isLoading}
           />
+        </Route>
+        <Route path='/orders'>
+          <Orders/>
         </Route>
       </div>
     </AppContext.Provider>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AppContext } from "../App";
 import Info from "./Info";
 import axios from "axios";
+import { useCart } from "../hooks/useCart";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -10,10 +11,10 @@ const Drawer = ({ openCard, itemsInCard, removeFromCard }) => {
   const { setItemsInCard } = React.useContext(AppContext);
   const [orderId, setOrderId] = useState(null);
   const [isLoading, setIsloading] = useState(false);
+  const { totalPrice } = useCart();
 
   const placeOrder = async () => {
     try {
-       
       setIsloading(true);
       const { data } = await axios.post(
         "https://60f035ecf587af00179d3dc9.mockapi.io/orders",
@@ -53,8 +54,8 @@ const Drawer = ({ openCard, itemsInCard, removeFromCard }) => {
         </h2>
 
         {itemsInCard.length > 0 ? (
-          <div className="d-flex flex-column flex">
-            <div className="items">
+          <div className="d-flex flex-column flex" style={{overflow: 'scroll'}}>
+            <div className="items flex">
               {itemsInCard.map((item) => (
                 <div
                   key={item.id}
@@ -85,12 +86,12 @@ const Drawer = ({ openCard, itemsInCard, removeFromCard }) => {
                 <li>
                   <span>Total: </span>
                   <div></div>
-                  <b>Sneakers price</b>
+                  <b>{totalPrice} Kč</b>
                 </li>
                 <li>
-                  <span>Tax: </span>
+                  <span>`Tax (21%): `</span>
                   <div></div>
-                  <b>Tax value</b>
+                  <b>{Math.round((totalPrice / 100) * 21)} Kč</b>
                 </li>
               </ul>
               <button
